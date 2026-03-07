@@ -1,0 +1,55 @@
+{
+  "id": "demo-realm",
+  "realm": "demo-realm",
+  "enabled": true,
+  "roles": {
+    "realm": [
+      {
+        "name": "user",
+        "description": "Standard User Role"
+      }
+    ]
+  },
+  "groups": [],
+  "clients": [
+    {
+      "clientId": "angular-client",
+      "enabled": true,
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "webOrigins": [
+        "*"
+      ],
+      "redirectUris": [
+        "http://localhost:4200/*"
+      ],
+      "standardFlowEnabled": true,
+      "attributes": {
+        "pkce.code.challenge.method": "S256"
+      }
+    },
+    {
+      "clientId": "quarkus-service",
+      "enabled": true,
+      "bearerOnly": true,
+      "webOrigins": [],
+      "redirectUris": []
+    }
+  ],
+  "users": [
+    {
+      "username": "testuser",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "test",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "user"
+      ]
+    }
+  ]
+}

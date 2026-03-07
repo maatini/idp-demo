@@ -1,0 +1,37 @@
+<div class="container">
+  <header>
+    <h1>IDP Demo <span class="badge">Angular 21 + Quarkus</span></h1>
+  </header>
+
+  <main>
+    <div class="card shadow">
+      @if (isLoggedIn()) {
+      <div class="user-section">
+        <div class="user-info">
+          <h2>Hallo, <span class="username">{{ username() }}</span>!</h2>
+          <p>Du bist erfolgreich authentifiziert.</p>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-secondary" (click)="callBackend()" [disabled]="loading()">
+            @if (loading()) { <span class="spinner"></span> }
+            Geschützten Endpoint aufrufen
+          </button>
+          <button class="btn btn-outline" (click)="logout()">Logout</button>
+        </div>
+
+        @if (backendResponse()) {
+        <div class="response-section fade-in">
+          <h3>Backend Antwort:</h3>
+          <pre>{{ backendResponse() | json }}</pre>
+        </div>
+        }
+      </div>
+      }
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Antigravity - Advanced Agentic Coding Demo</p>
+  </footer>
+</div>

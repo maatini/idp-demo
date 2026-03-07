@@ -1,0 +1,21 @@
+{
+    "packages": [
+        "nodejs_22",
+        "openjdk21",
+        "maven",
+        "docker-compose"
+    ],
+    "shell": {
+        "init_hook": [
+            "echo 'Welcome to the IDP Demo Devbox environment!'",
+            "echo 'Use `devbox run` to see available scripts.'"
+        ],
+        "scripts": {
+            "infra": "docker compose up -d",
+            "backend": "cd quarkus-backend && ./mvnw quarkus:dev",
+            "frontend": "cd angular-frontend && npm start",
+            "install:all": "cd angular-frontend && npm install && cd ../e2e-tests && npm install && npx playwright install chromium",
+            "test:e2e": "cd e2e-tests && npx playwright test"
+        }
+    }
+}
