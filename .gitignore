@@ -1,0 +1,31 @@
+# OS & IDE
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.log
+
+# Devbox
+.devbox/
+
+# Node.js / Frontend / E2E
+node_modules/
+dist/
+.angular/
+playwright-report/
+test-results/
+.env
+
+# Java / Maven / Quarkus
+target/
+.mvn/wrapper/*.jar
+!target/*.war
+!target/*.jar
+.quarkus/
+
+# Docker
+.docker/
+keycloak/data/
+
+# Playwright browsers (if installed locally in project)
+pw-browsers/
