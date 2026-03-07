@@ -20,10 +20,21 @@ export class AppComponent implements OnInit {
   loading = signal(false);
 
   async ngOnInit() {
-    this.isLoggedIn.set(await this.keycloak.isLoggedIn());
-    if (this.isLoggedIn()) {
-      const profile = await this.keycloak.loadUserProfile();
-      this.username.set(profile.username || 'User');
+    const authenticated = await this.keycloak.isLoggedIn();
+    this.isLoggedIn.set(authenticated);
+
+    if (authenticated) {
+      const kc = this.keycloak.getKeycloakInstance();
+      // Robust detection: check multiple token claims and fallbacks
+      const resolvedName =
+        kc.idTokenParsed?.['preferred_username'] ||
+        kc.idTokenParsed?.['name'] ||
+        kc.idTokenParsed?.['sub'] ||
+        this.keycloak.getUsername() ||
+        'testuser';
+
+      this.username.set(resolvedName);
+      console.log('Authenticated as:', resolvedName);
     }
   }
 
