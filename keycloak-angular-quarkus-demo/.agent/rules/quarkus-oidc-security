@@ -1,0 +1,6 @@
+- Immer Quarkus 3.x mit quarkus-oidc Extension für Keycloak JWT-Validierung.
+- quarkus.oidc.auth-server-url, client-id und credentials.secret korrekt konfigurieren.
+- REST-Endpunkte mit @Authenticated oder @RolesAllowed("user") absichern.
+- Kein manuelles JWT-Parsing – immer quarkus-oidc nutzen.
+- Bearer-Only Client für den Quarkus-Service (kein Standard-Flow).
+- Alle geschützten Pfade unter /api/* mit "authenticated"-Policy.

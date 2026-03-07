@@ -1,0 +1,6 @@
+- Angular-Client = Public Client (Redirect http://localhost:4200/*)
+- Quarkus-Service = Confidential/Bearer-Only Client
+- Immer Access-Token (nicht ID-Token) im Authorization: Bearer Header senden.
+- Token-Refresh automatisch über keycloak-angular Interceptor.
+- Keine Credentials im Code – immer über environment.ts oder application.properties.
+- Rolle "user" muss vorhanden sein für Zugriff auf /api/*
