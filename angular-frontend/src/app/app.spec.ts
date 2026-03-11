@@ -1,25 +1,26 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app';
-import { KeycloakService } from 'keycloak-angular';
+import { OAuthService } from 'angular-oauth2-oidc';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('AppComponent', () => {
-  let keycloakServiceMock: any;
+  let oauthServiceMock: any;
 
   beforeEach(async () => {
-    keycloakServiceMock = {
-      isLoggedIn: vi.fn(),
-      getKeycloakInstance: vi.fn(),
-      getUsername: vi.fn()
+    oauthServiceMock = {
+      hasValidAccessToken: vi.fn(),
+      getIdentityClaims: vi.fn(),
+      initLoginFlow: vi.fn(),
+      logOut: vi.fn()
     };
-    keycloakServiceMock.isLoggedIn.mockResolvedValue(false);
+    oauthServiceMock.hasValidAccessToken.mockReturnValue(false);
 
     await TestBed.configureTestingModule({
       imports: [AppComponent],
       providers: [
-        { provide: KeycloakService, useValue: keycloakServiceMock },
+        { provide: OAuthService, useValue: oauthServiceMock },
         provideHttpClient(),
         provideHttpClientTesting()
       ]

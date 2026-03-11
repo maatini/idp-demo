@@ -1,7 +1,7 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { KeycloakService } from 'keycloak-angular';
+import { OAuthService } from 'angular-oauth2-oidc';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +11,7 @@ import { KeycloakService } from 'keycloak-angular';
   styleUrl: './app.css'
 })
 export class AppComponent implements OnInit {
-  private keycloak = inject(KeycloakService);
+  private oauthService = inject(OAuthService);
   private http = inject(HttpClient);
 
   isLoggedIn = signal(false);
@@ -19,18 +19,17 @@ export class AppComponent implements OnInit {
   backendResponse = signal<any>(null);
   loading = signal(false);
 
-  async ngOnInit() {
-    const authenticated = await this.keycloak.isLoggedIn();
+  ngOnInit() {
+    const authenticated = this.oauthService.hasValidAccessToken();
     this.isLoggedIn.set(authenticated);
 
     if (authenticated) {
-      const kc = this.keycloak.getKeycloakInstance();
-      // Robust detection: check multiple token claims and fallbacks
+      const claims: any = this.oauthService.getIdentityClaims();
+      
       const resolvedName =
-        kc.idTokenParsed?.['preferred_username'] ||
-        kc.idTokenParsed?.['name'] ||
-        kc.idTokenParsed?.['sub'] ||
-        this.keycloak.getUsername() ||
+        claims?.['preferred_username'] ||
+        claims?.['name'] ||
+        claims?.['sub'] ||
         'testuser';
 
       this.username.set(resolvedName);
@@ -38,12 +37,13 @@ export class AppComponent implements OnInit {
     }
   }
 
-  async login() {
-    await this.keycloak.login();
+  login() {
+    this.oauthService.initLoginFlow();
   }
 
-  async logout() {
-    await this.keycloak.logout(window.location.origin);
+  logout() {
+    this.oauthService.postLogoutRedirectUri = window.location.origin;
+    this.oauthService.logOut();
   }
 
   callBackend() {

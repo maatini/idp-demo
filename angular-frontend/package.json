@@ -17,8 +17,7 @@
     "@angular/forms": "^20.3.17",
     "@angular/platform-browser": "^20.3.17",
     "@angular/router": "^20.3.17",
-    "keycloak-angular": "^20.1.0",
-    "keycloak-js": "^26.2.3",
+    "angular-oauth2-oidc": "^17.0.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

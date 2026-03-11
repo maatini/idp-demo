@@ -1,18 +1,18 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Keycloak Authentication Flow', () => {
-    test('should redirect to Keycloak login and back', async ({ page }) => {
-        // 1. Go to Angular App (it will auto-redirect toward Keycloak)
+test.describe('OIDC Authentication Flow', () => {
+    test('should redirect to IDP login and back', async ({ page }) => {
+        // 1. Go to Angular App (it will auto-redirect toward IDP due to our init logic)
         await page.goto('/');
 
-        // 2. Authenticate in Keycloak
+        // 2. Authenticate in IDP
         await page.waitForURL(/.*protocol\/openid-connect\/auth.*/, { timeout: 15000 });
 
         await page.fill('#username', 'testuser');
         await page.fill('#password', 'test');
         await page.click('#kc-login');
 
-        // 3. Verify Redirect back to App (flexible trailing slash)
+        // 3. Verify Redirect back to App
         await page.waitForURL(/\/localhost:4200\/?/);
         await expect(page.getByText('Hallo, testuser!')).toBeVisible({ timeout: 15000 });
 
@@ -21,8 +21,8 @@ test.describe('Keycloak Authentication Flow', () => {
         await expect(page.getByText('Backend Antwort:')).toBeVisible();
         await expect(page.locator('pre')).toContainText('"message": "Hallo testuser!"');
 
-        // 5. Test Logout (should redirect toward Keycloak or back to base URL)
+        // 5. Test Logout (should redirect toward IDP or back to base URL)
         await page.click('text=Logout');
-        await page.waitForURL(/.*(localhost:4200|protocol\/openid-connect\/auth).*/);
+        await page.waitForURL(/.*(localhost:4200|protocol\/openid-connect\/logout).*/);
     });
 });
