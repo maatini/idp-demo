@@ -11,24 +11,25 @@
   "private": true,
   "packageManager": "npm@11.6.2",
   "dependencies": {
-    "@angular/common": "^21.2.0",
-    "@angular/compiler": "^21.2.0",
-    "@angular/core": "^21.2.0",
-    "@angular/forms": "^21.2.0",
-    "@angular/platform-browser": "^21.2.0",
-    "@angular/router": "^21.2.0",
-    "keycloak-angular": "^21.0.0",
+    "@angular/common": "^20.3.17",
+    "@angular/compiler": "^20.3.17",
+    "@angular/core": "^20.3.17",
+    "@angular/forms": "^20.3.17",
+    "@angular/platform-browser": "^20.3.17",
+    "@angular/router": "^20.3.17",
+    "keycloak-angular": "^20.1.0",
     "keycloak-js": "^26.2.3",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
-    "@angular/build": "^21.2.1",
-    "@angular/cli": "^21.2.1",
-    "@angular/compiler-cli": "^21.2.0",
+    "@angular/build": "^20.3.17",
+    "@angular/cli": "^20.3.17",
+    "@angular/compiler-cli": "^20.3.17",
     "jsdom": "^28.0.0",
     "prettier": "^3.8.1",
-    "typescript": "~5.9.2",
-    "vitest": "^4.0.8"
+    "typescript": "~5.8.3",
+    "vitest": "^3.1.1",
+    "zone.js": "^0.15.1"
   }
 }

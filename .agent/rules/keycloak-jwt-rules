@@ -1,0 +1,6 @@
+- Angular-Client: publicClient + directAccessGrants + standardFlow
+- Quarkus-Client: bearerOnly = true
+- Realm-Role "user" muss im Token vorhanden sein
+- preferred_username oder name aus idTokenParsed verwenden
+- Logout immer mit redirectUri = window.location.origin
+- Silent-Check-SSO immer aktiv

@@ -1,0 +1,8 @@
+- Immer standalone components + zoneless
+- State nur mit Signals (nie BehaviorSubject in neuen Features)
+- Keycloak-Initialisierung NUR über APP_INITIALIZER in app.config.ts
+- Keine hard-coded URLs → immer aus environment.ts
+- Login/Logout immer über keycloak-angular Service
+- Backend-Calls mit automatisch mitgesendetem Bearer-Token
+- Tests: Vitest + Playwright (siehe e2e-tests)
+- Prettier + EditorConfig strikt einhalten

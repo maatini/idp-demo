@@ -1,0 +1,7 @@
+- Niemals Credentials oder Secrets im Code (außer demo-realm.json)
+- Immer `@Authenticated` + `@RolesAllowed("user")`
+- Token-Validierung ausschließlich über Keycloak (kein manueller JWT-Parsing)
+- CORS nur für localhost:4200 im Dev-Modus
+- Port strikt 8091
+- Response immer JSON mit username und roles
+- Keine @Path("/hello") – immer "/api/hello\"

@@ -1,7 +1,0 @@
-- Verwende ausschließlich Angular 21 (Standalone Components, Signals, zoneless Change Detection als Default).
-- Keine NgModules mehr, außer wenn technisch zwingend nötig.
-- Immer `provideHttpClient(withInterceptors([...]))` und `provideRouter` in app.config.ts.
-- Verwende keycloak-angular + KeycloakService für Auth.
-- Alle Komponenten mit Signals und OnPush (oder zoneless).
-- TypeScript strict mode + ESLint + Prettier strikt einhalten.
-- Keine deprecated APIs (z. B. kein HttpClientModule mehr).

@@ -1,5 +1,0 @@
-- Projektstruktur immer: angular-frontend/ + quarkus-backend/ + docker-compose.yml
-- Angular auf Port 4200, Quarkus auf 8081, Keycloak auf 8080
-- Immer docker-compose mit Keycloak Dev-Mode + PostgreSQL + Realm-Import
-- README.md mit exakten Startbefehlen (npm install && ng serve, ./mvnw quarkus:dev, docker compose up)
-- Keine hartcodeten Secrets – alles über environment / properties

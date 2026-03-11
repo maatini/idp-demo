@@ -1,0 +1,7 @@
+- Alles über devbox.json + docker-compose.yml starten
+- Backend: quarkus:dev (Port 8091)
+- Frontend: ng serve (Port 4200)
+- Keycloak: 8080
+- E2E-Tests: nur mit `devbox run test:e2e`
+- Keine node_modules oder target im Repo
+- Dockerfiles nur für Production (nicht ändern)

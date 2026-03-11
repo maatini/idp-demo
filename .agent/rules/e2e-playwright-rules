@@ -1,0 +1,5 @@
+- Tests immer mit Playwright (chromium)
+- Login-Flow: testuser / test
+- Assertions auf "Hallo, testuser!" und Backend-JSON
+- Logout muss zurück zu Keycloak oder / redirecten
+- Timeout 15s für Keycloak-Login
