@@ -7,23 +7,27 @@ Dieses Projekt dient als **Vorlage und Lern-Beispiel**. Es zeigt, wie man:
 1. Eine Benutzeranmeldung über **Keycloak** realisiert.
 2. Ein **Angular-Frontend** so konfiguriert, dass es nur für angemeldete Benutzer zugänglich ist.
 3. Ein **Quarkus-Backend** absichert, sodass es nur gültige Token ("Eintrittskarten") akzeptiert.
-4. Das alles lokal mittels **Docker** startet.
+4. Das alles lokal mittels **Devbox** und **Docker** startet und entwickelt.
 
 ---
 
-## 🏗️ Das Zusammenspiel (Architektur)
+## 🏗️ Aktuelle Architektur & Ports
+Das Projekt besteht aus drei Hauptkomponenten:
+- **UI (Angular Frontend)**: Port `4200`
+- **Backend (Quarkus)**: Port `8091`
+- **IDP (Keycloak)**: Port `8080`
 
 Das folgende Diagramm zeigt vereinfacht, wie die Komponenten miteinander "sprechen":
 
 ```mermaid
 graph TD
     subgraph "Benutzer-Browser"
-        UI[Angular Frontend]
+        UI[Angular Frontend (Port 4200)]
     end
 
     subgraph "Server / Docker"
-        IDP[Keycloak IDP]
-        API[Quarkus Backend]
+        IDP[Keycloak IDP (Port 8080)]
+        API[Quarkus Backend (Port 8091)]
     end
 
     User((Benutzer)) -->|1. Login Request| UI
@@ -31,22 +35,23 @@ graph TD
     IDP -->|3. Login erfolgreich + Token| UI
     UI -->|4. Request mit Token| API
     API -->|5. Token Validierung| IDP
-    API -->|6. Daten Antwort| UI
+    API -->|6. JSON Daten & Rollen| UI
 ```
-
-1. **Benutzer** möchte auf die App zugreifen.
-2. **Frontend** leitet den Benutzer zu **Keycloak** weiter.
-3. Nach dem Login erhält das Frontend einen **Token** (JWT).
-4. Das Frontend sendet diesen Token bei jeder Anfrage an das **Backend** mit.
-5. Das **Backend** prüft beim IDP (oder via Zertifikat), ob der Token echt ist.
-6. Wenn alles passt, liefert das Backend die **Daten**.
 
 ---
 
-## 🔑 Keycloak in diesem Projekt
+## 🚀 Neue Features seit 2025
+- **Zoneless Angular**: Nutzt `provideZonelessChangeDetection` anstelle der traditionellen `zone.js` Logik.
+- **Modernes Styling**: Aufgewertetes Design für die Demo mit passenden Badges.
+- **Backend-Demo-Button**: Zeigt direkt die vom Backend stammenden Informationen, Rollen und den Benutzernamen an.
+
+---
+
+## 🔑 Keycloak in diesem Projekt (Version 26.1.1)
 
 Wir verwenden **Keycloak** als zentralen Speicherort für Benutzer und Rechte.
-- **Vorteil**: Du musst Passwörter nicht selbst in deiner Datenbank speichern. Keycloak kümmert sich um Sicherheit, "Passwort vergessen"-Funktionen und vieles mehr.
+- **Datenbank**: Nutzt eine dedizierte Postgres-Datenbank (`postgres:15`).
+- **Feature**: Der `token-exchange` ist standardmäßig aktiviert.
 - **Konfiguration**: In diesem Projekt wird Keycloak automatisch mit einem `demo-realm` und zwei Clients vorkonfiguriert:
     - `angular-client`: Für die Anmeldung im Browser.
     - `quarkus-service`: Für die Absicherung der Schnittstellen.
@@ -55,40 +60,62 @@ Wir verwenden **Keycloak** als zentralen Speicherort für Benutzer und Rechte.
 
 ## 🛠️ Die Komponenten im Detail
 
-### 1. UI (Angular Frontend)
-- **Technik**: Angular + Keycloak Angular Library.
+### 1. UI (Angular Frontend) - Version 20.3.17
+- **Technik**: Standalone Zoneless Angular + `angular-oauth2-oidc`.
 - **Aufgabe**: Sorgt dafür, dass der "Login"-Button erscheint und der Token sicher im Browser verwaltet wird.
-- **Config**: Findest du in `src/environments/environment.ts`.
+- **Ersetzung**: Es wird nun `angular-oauth2-oidc` statt der älteren "Keycloak Angular Library" oder `keycloak-js` genutzt.
 
-### 2. Backend (Quarkus)
-- **Technik**: Java mit Quarkus (OIDC Extension).
-- **Aufgabe**: Prüft den "Authorization"-Header bei eingehenden Anrufen. Nur wer einen gültigen Token hat, darf die API benutzen.
-- **Config**: Findest du in `src/main/resources/application.properties`.
-
-### 3. IDP (Keycloak)
-- **Technik**: Keycloak (läuft in Docker).
-- **Aufgabe**: Die zentrale Instanz für Identität.
+### 2. Backend (Quarkus) - Version 3.15.1
+- **Technik**: Java mit Quarkus und `quarkus-oidc`.
+- **Aufgabe**: Prüft den "Authorization"-Header bei eingehenden Anrufen (`@Authenticated`). Die API prüft zudem auf Rollen wie `@RolesAllowed("user")`.
+- **Rückgabe**: Sendet eine JSON-Response zurück, die die Rollen und den extrahierten Username beinhaltet.
 
 ---
 
-## 🚀 Wie du das in eigenen Projekten verwendest
+## 🔐 OAuth-Initialisierung & Auto-Login
 
-Wenn du dieses Muster (Pattern) für dein eigenes Projekt nutzen möchtest, gehe so vor:
+Der Authentifizierungsfluss mit `angular-oauth2-oidc` wird in `oauth-init.ts` orchestriert:
+1. **Discovery**: Die App lädt die Konfiguration des IDP über `loadDiscoveryDocumentAndTryLogin()`.
+2. **Auto-Login**: Liegt kein gültiges Access-Token vor, startet sie automatisch den Login (`initLoginFlow()`).
+3. **Silent Refresh**: Für bestehende Sitzungen gibt es einen automatischen Refresh im Hintergrund über das versteckte Iframe-Template in `silent-check-sso.html`.
 
-1. **IDP wählen**: Nutze Keycloak (lokal/selbst gehostet) oder Dienste wie Auth0 / Azure AD. alle nutzen den gleichen Standard (**OIDC/OAuth2**).
-2. **Frontend absichern**:
-    - Installiere eine OIDC-Library (z.B. `oidc-client-ts` oder frameworks-spezifische Libs).
-    - Schütze deine Routen mit einem **AuthGuard**.
-3. **Backend absichern**:
-    - Nutze eine OIDC/JWT Extension deines Frameworks (Quarkus, Spring Boot, Node.js Passport).
-    - Konfiguriere die `issuer-url`, damit das Backend weiß, welchem IDP es vertrauen darf.
-4. **Token mitschicken**: Achte darauf, dass dein Frontend den Token im Header mitschickt: `Authorization: Bearer <TOKEN>`.
+---
+
+## 📦 Devbox-Entwicklungsumgebung
+
+Das Projekt nutzt [Devbox](https://www.jetpack.io/devbox) (Nix) als primäres Isolations- und Ausführungssystem. Dadurch entfällt ein komplexes Setup. Alle Abhängigkeiten (wie Node, JDK, Maven) werden von Devbox bereitgestellt.
+
+### Wichtige Scripts:
+- `devbox run install:all`: Installiert alle Abhängigkeiten (Frontend, E2E, Playwright Browser).
+- `devbox run infra`: Startet Backend-Infrastruktur (`docker-compose` mit Keycloak & Postgres).
+- `devbox run frontend`: Startet die Angular CLI auf Port 4200.
+- `devbox run backend`: Startet Quarkus im Live-Coding Dev-Mode auf Port 8091.
 
 ---
 
 ## 🏃 Schnellstart
-Stelle sicher, dass Docker installiert ist, und führe aus:
+Stelle sicher, dass **Devbox** und **Docker** installiert sind, dann nutze die folgenden Skripte in getrennten Terminals:
+
 ```bash
-docker-compose up -d
+# 1. Infrastruktur (Keycloak + DB) starten (Dauert kurz bis es bereit ist)
+devbox run infra
+
+# 2. Alle Abhängigkeiten installieren
+devbox run install:all
+
+# 3. Backend starten
+devbox run backend
+
+# 4. Frontend starten
+devbox run frontend
 ```
-Anschließend kannst du Keycloak unter `http://localhost:8080` und die App (sobald gestartet) erreichen.
+Anschließend kannst du das Frontend unter `http://localhost:4200` und Keycloak unter `http://localhost:8080` (Benutzer: admin/admin) erreichen.
+
+---
+
+## 🧪 End-to-End Tests mit Playwright
+Das Projekt verfügt über vollständige automatische UI-Tests:
+```bash
+devbox run test:e2e
+```
+Playwright öffnet dafür den Chromium-Browser und navigiert durch den echten Login-Flow des Keycloak-Servers und verifiziert die Quarkus Backend-Calls.

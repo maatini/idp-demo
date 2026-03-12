@@ -1,18 +1,29 @@
 # quarkus-backend
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+This project uses Quarkus, the Supersonic Subatomic Java Framework (Version 3.15.1).
 
 If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
 
+## OIDC & Security Architecture
+
+This backend serves as a secured resource server via the `quarkus-oidc` extension. It validates JWT tokens coming from identity providers like Keycloak.
+- **Port**: Runs on `8091` (`quarkus.http.port=8091`).
+- **Authorization**: Endpoints are secured ensuring only authenticated contexts succeed (`@Authenticated`) and asserting proper roles (`@RolesAllowed("user")`).
+- **Identity Information**: The backend constructs a structured JSON response identifying the injected `username` and specific `roles`.
+
 ## Running the application in dev mode
 
-You can run your application in dev mode that enables live coding using:
+We recommend using the Devbox scripts to boot the backend environment efficiently:
 
+```shell script
+devbox run backend
+```
+Or use the maven wrapper directly:
 ```shell script
 ./mvnw compile quarkus:dev
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8091/q/dev/>.
 
 ## Packaging and running the application
 
@@ -27,34 +38,5 @@ Be aware that it’s not an _über-jar_ as the dependencies are copied into the 
 
 The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
 
-If you want to build an _über-jar_, execute the following command:
-
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
-```
-
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
-
-## Creating a native executable
-
-You can create a native executable using:
-
-```shell script
-./mvnw package -Dnative
-```
-
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
-
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
-```
-
-You can then execute your native executable with: `./target/quarkus-backend-1.0.0-SNAPSHOT-runner`
-
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
-
 ## Related Guides
-
-- SmallRye JWT ([guide](https://quarkus.io/guides/security-jwt)): Secure your applications with JSON Web Token
-- REST Jackson ([guide](https://quarkus.io/guides/rest#json-serialisation)): Jackson serialization support for Quarkus REST. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it
 - OpenID Connect ([guide](https://quarkus.io/guides/security-openid-connect)): Verify Bearer access tokens and authenticate users with Authorization Code Flow
