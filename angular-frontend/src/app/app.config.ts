@@ -2,7 +2,8 @@ import { ApplicationConfig, provideZonelessChangeDetection, APP_INITIALIZER } fr
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { HttpClient, provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';
-import { provideOAuthClient, OAuthService } from 'angular-oauth2-oidc';
+// 1. OAuthStorage importieren
+import { provideOAuthClient, OAuthService, OAuthStorage } from 'angular-oauth2-oidc';
 import { initializeOAuth } from './init/oauth-init';
 
 export const appConfig: ApplicationConfig = {
@@ -11,11 +12,13 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withFetch(), withInterceptorsFromDi()),
     provideOAuthClient({
-      config: {
-        sendAccessToken: true,
-        allowedUrls: ['http://localhost:8091/api']
+      resourceServer: {
+        allowedUrls: ['http://localhost:8091/api'],
+        sendAccessToken: true
       }
     }),
+    // 2. HIER IST DER FIX: LocalStorage als Standard für Token & Nonces definieren
+    { provide: OAuthStorage, useFactory: () => localStorage },
     {
       provide: APP_INITIALIZER,
       useFactory: initializeOAuth,

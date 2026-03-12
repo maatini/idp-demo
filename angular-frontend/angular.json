@@ -27,9 +27,7 @@
             "styles": [
               "src/styles.css"
             ],
-            "polyfills": [
-              "zone.js"
-            ]
+            "polyfills": []
           },
           "configurations": {
             "production": {

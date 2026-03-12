@@ -7,10 +7,14 @@ export const environment = {
         issuer: 'http://localhost:8080/realms/demo-realm',
         clientId: 'angular-client',
         responseType: 'code',
-        scope: 'openid profile email offline_access',
-        requireHttps: false, 
+        scope: 'openid profile email',
+        requireHttps: false,
         strictDiscoveryDocumentValidation: false,
         useSilentRefresh: true,
-        // redirectUri und silentRefreshRedirectUri werden dynamisch in init zugewiesen.
+
+        // === KRITISCHE FLAGS ===
+        storage: localStorage,
+        saveNoncesInLocalStorage: true,
+        clearHashAfterLogin: true,
     } as AuthConfig
 };

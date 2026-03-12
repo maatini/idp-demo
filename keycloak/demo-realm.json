@@ -18,7 +18,9 @@
       "publicClient": true,
       "directAccessGrantsEnabled": true,
       "webOrigins": [
-        "*"
+        "+",
+        "http://localhost:4200",
+        "http://localhost:4200/*"
       ],
       "redirectUris": [
         "http://localhost:4200/*"

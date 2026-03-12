@@ -1,37 +1,36 @@
-<div class="container">
-  <header>
-    <h1>IDP Demo <span class="badge">Angular 20 + Quarkus</span></h1>
-  </header>
+<main class="container">
+  <div class="header">
+    <h1>IDP Demo</h1>
+    <span class="badge">Angular 20 + Quarkus</span>
+  </div>
 
-  <main>
-    <div class="card shadow">
-      @if (isLoggedIn()) {
-      <div class="user-section">
-        <div class="user-info">
-          <h2>Hallo, <span class="username">{{ username() || 'testuser' }}</span>!</h2>
-          <p>Du bist erfolgreich authentifiziert.</p>
-        </div>
+  @if (isLoggedIn()) {
+    <div class="card">
+      <h2>Hallo, {{ username() }}!</h2>
+      <p>Status: Erfolgreich authentifiziert ✅</p>
+      
+      <div class="actions">
+        <button (click)="callBackend()" [disabled]="loading()">
+          {{ loading() ? 'Lade...' : 'Geschützten Endpoint aufrufen' }}
+        </button>
+        <button (click)="logout()" class="btn-secondary">Logout</button>
+      </div>
 
-        <div class="actions">
-          <button class="btn btn-secondary" (click)="callBackend()" [disabled]="loading()">
-            @if (loading()) { <span class="spinner"></span> }
-            Geschützten Endpoint aufrufen
-          </button>
-          <button class="btn btn-outline" (click)="logout()">Logout</button>
-        </div>
-
-        @if (backendResponse()) {
-        <div class="response-section fade-in">
+      @if (backendResponse()) {
+        <div class="response-box">
           <h3>Backend Antwort:</h3>
           <pre>{{ backendResponse() | json }}</pre>
         </div>
-        }
-      </div>
       }
     </div>
-  </main>
+  } @else {
+    <div class="card error-card">
+      <h2>Nicht angemeldet ❌</h2>
+      <p>Es liegt kein gültiges Token vor. Bitte melde dich an.</p>
+      <div class="actions">
+        <button (click)="login()">Login mit Keycloak starten</button>
+      </div>
+    </div>
+  }
+</main>
 
-  <footer>
-    <p>&copy; 2026 Antigravity - Advanced Agentic Coding Demo</p>
-  </footer>
-</div>
