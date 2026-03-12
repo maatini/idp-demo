@@ -22,20 +22,20 @@ Das folgende Diagramm zeigt vereinfacht, wie die Komponenten miteinander "sprech
 ```mermaid
 graph TD
     subgraph "Benutzer-Browser"
-        UI[Angular Frontend (Port 4200)]
+        UI["Angular Frontend (Port 4200)"]
     end
 
     subgraph "Server / Docker"
-        IDP[Keycloak IDP (Port 8080)]
-        API[Quarkus Backend (Port 8091)]
+        IDP["Keycloak IDP (Port 8080)"]
+        API["Quarkus Backend (Port 8091)"]
     end
 
-    User((Benutzer)) -->|1. Login Request| UI
-    UI -->|2. Redirect zum Login| IDP
-    IDP -->|3. Login erfolgreich + Token| UI
-    UI -->|4. Request mit Token| API
-    API -->|5. Token Validierung| IDP
-    API -->|6. JSON Daten & Rollen| UI
+    User(("Benutzer")) -->|"1. Login Request"| UI
+    UI -->|"2. Redirect zum Login"| IDP
+    IDP -->|"3. Login erfolgreich + Token"| UI
+    UI -->|"4. Request mit Token"| API
+    API -->|"5. Token Validierung"| IDP
+    API -->|"6. JSON Daten & Rollen"| UI
 ```
 
 ---
